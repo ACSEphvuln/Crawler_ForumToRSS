@@ -1,18 +1,12 @@
 import PyRSS2Gen
-from lib.forumParser import ForumParser
 import datetime
+from lib.rssMaker import RSSPuller
 
-def getForumNews():
-    url = "https://breached.vc/Forum-Databases?sortby=started&order=desc&datecut=1&prefix=0"
-    getter = ForumParser(url)
-    
-    base = "/html/body/div[1]/main/table[2]/tbody"
-    start = 10
-    
+def getBreachedVC():
     filters = {
         "Title":{
             "xpath": "/td[2]/div/div[1]/span/a",
-            "attrib": None # Default get Text
+            "attrib": None 
         },
         "Date":{
             "xpath": "/td[5]/span/span",
@@ -28,53 +22,28 @@ def getForumNews():
         },
     }
 
-    posts = getter.getPosts(base,start,filters)
+    br_pull = RSSPuller(forumStruct={
+                            "url":"https://breached.vc/Forum-Databases?sortby=started&order=desc&datecut=1&prefix=0" ,
+                            "base":"/html/body/div[1]/main/table[2]/tbody",
+                            "start":10,
+                            "filters":filters,
+                            },
+                        cachefile="cache/cache_breachedvc.txt",
+                        pull_type="dynamic")
+    return br_pull.getRSSItems()
 
-    return posts
+def getNulledTO():
+    raise NotImplementedError()
 
 def postNews(filename):
-    # create an RSS feed object
-    elements = getForumNews()
-
-    if element == None:
-        print("Could not get feed for breached.vc")
-        print("Check for manual captcha")
-        return
-
-    # Check if already present
-    try :
-        with open("cache/feed_items.txt",'r') as g:
-            prev_items = g.read().split('\n')
-            prev_items.pop()
-    except:
-        prev_items = [] 
-
-    eTitles = []
-    for e in elements:
-        eTitles.append(e['Title'])
-
-    if set(prev_items) == set(eTitles):
-        print("Nothing to publish")
-        return None
-
-    with open("cache/feed_items.txt",'w') as g:
-        for i in eTitles:
-            g.write(f"{i}\n")
-
-    # add each element to the RSS feed
     feed_items = []
-    for element in elements:
-        title = f"breached.vc | \"{element['Title']}\""
-        link = f"https://breached.vc/{element['Link']}"
-        description = f"Leaked by {element['Description']}"
-        date = element['Date']
-        feed_item = PyRSS2Gen.RSSItem(title=title, link=link, description=description, pubDate=date)
-        feed_items.append(feed_item)
+    #feed_items.append(getBreachedVC()) - SITE DOWN
+    feed_items.append(getNulledTO())
 
     feed = PyRSS2Gen.RSS2(
-        title="New leaks @breach.vc",
+        title="New leaks",
         link="http://localhost", # TODO CHANGE
-        description="Breachvc has new forum posts!",
+        description="Feeding new leaks..",
         lastBuildDate=datetime.datetime.now(),
         items=feed_items
     )

@@ -1,7 +1,16 @@
 import time
 from selenium import webdriver
+import urllib.request
 
-class PageGetter:
+class StaticPageGetter:
+    def __init__(self, url) -> None:
+        self.url = url
+
+    def getPage(self, waitTime=5):
+        page = urllib.request.urlopen(self.url,timeout=waitTime)
+        return page.read()
+
+class DynamicPageGetter:
     def __init__(self, url) -> None:
         self.url = url
         self.driver = None
