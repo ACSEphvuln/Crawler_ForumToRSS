@@ -36,9 +36,14 @@ def postNews(filename):
     # create an RSS feed object
     elements = getForumNews()
 
+    if element == None:
+        print("Could not get feed for breached.vc")
+        print("Check for manual captcha")
+        return
+
     # Check if already present
     try :
-        with open("feed_items.txt",'r') as g:
+        with open("cache/feed_items.txt",'r') as g:
             prev_items = g.read().split('\n')
             prev_items.pop()
     except:
@@ -52,7 +57,7 @@ def postNews(filename):
         print("Nothing to publish")
         return None
 
-    with open("feed_items.txt",'w') as g:
+    with open("cache/feed_items.txt",'w') as g:
         for i in eTitles:
             g.write(f"{i}\n")
 
@@ -81,4 +86,4 @@ def postNews(filename):
     return feed.to_xml()
 
 if __name__ == "__main__":
-    postNews("rss.xml")
+    postNews("feed/rss.xml")

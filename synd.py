@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def hello():
-    with open("rss.xml",'r') as g:
+    with open("feed/rss.xml",'r') as g:
         feed = g.read()
     return feed
 

@@ -2,3 +2,6 @@ cache.html
 rss.xml
 feed_items.txt
 **/__pycache__/
+test/*
+cache/*
+feed/*

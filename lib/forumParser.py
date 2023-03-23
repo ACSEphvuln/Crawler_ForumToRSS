@@ -10,19 +10,25 @@ class ForumParser:
         
     def getPosts(self, base, startElem, filters):
         # LOCAL TEST ONLY
-        #html_content = self.pageGetter.getPage()
-        #with open("cache.html",'w') as g:
+        # html_content = self.pageGetter.getPage()
+        # with open("test/cache.html",'w') as g:
         #    g.write(html_content)
 
-        with open("cache.html") as g:
+        with open("test/cache.html") as g:
             html_content = g.read()
-
-        tableParser = TableParser(html_content, base)
         
+        try:
+            tableParser = TableParser(html_content, base)
+        except:
+            print("[Err] Could not get base element")
+            return None
+
         tableParser.setGrabFilters(filters)
 
         posts = []
         for i in range(startElem, tableParser.getNumElem()):
-            posts.append(tableParser.getElem(i))
+            elem = tableParser.getElem(i)
+            if elem != None:
+                posts.append(elem)
 
         return posts
