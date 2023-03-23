@@ -23,17 +23,46 @@ def getBreachedVC():
     }
 
     br_pull = RSSPuller(forumStruct={
-                            "url":"https://breached.vc/Forum-Databases?sortby=started&order=desc&datecut=1&prefix=0" ,
+                            "url":"https://breached.vc/Forum-Databases?sortby=started&order=desc&datecut=1&prefix=0",
                             "base":"/html/body/div[1]/main/table[2]/tbody",
                             "start":10,
                             "filters":filters,
                             },
                         cachefile="cache/cache_breachedvc.txt",
                         pull_type="dynamic")
+    
     return br_pull.getRSSItems()
 
 def getNulledTO():
-    raise NotImplementedError()
+    filters = {
+        "Title":{
+            "xpath": "/td[2]/h4/a/span[1]",
+            "attrib": None 
+        },
+        "Date":{
+            "xpath": "/td[5]/ul/li[2]/a",
+            "attrib": None
+        },
+        "Link":{
+            "xpath": "/td[2]/h4/a",
+            "attrib": "href"
+        },
+        "Description":{
+            "xpath": "/td[5]/ul/li[1]/a/span/span",
+            "attrib": None
+        },
+    }
+
+    br_pull = RSSPuller(forumStruct={
+                            "url":"https://www.nulled.to/forum/184-dumps-databases/?sort_key=start_date&sort_by=Z-A",
+                            "base":"/html/body/div[4]/div[3]/div/div[3]/div[4]/div[3]/div[3]/div/table/tbody",
+                            "start":5,
+                            "filters":filters,
+                            },
+                        cachefile="cache/cache_nulledto.txt",
+                        pull_type="dynamic")
+
+    return br_pull.getRSSItems()
 
 def postNews(filename):
     feed_items = []
