@@ -60,7 +60,7 @@ def getNulledTO():
                             "filters":filters,
                             },
                         cachefile="cache/cache_nulledto.txt",
-                        pull_type="dynamic")
+                        pull_type="static")
 
     return br_pull.getRSSItems()
 

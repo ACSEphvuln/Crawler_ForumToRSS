@@ -39,7 +39,7 @@ class RSSPuller(ForumParser):
         
         eTitles = [e['Title'] for e in elements]
 
-        if set(prev_items) == set(eTitles):
+        if set(prev_items) == set(eTitles): # BUG: maybe keep a single cache file so a site dosen't take over if an other dosent publish
             print(f"[INF] Nothing to publish for {self.url}")
             return []
 
