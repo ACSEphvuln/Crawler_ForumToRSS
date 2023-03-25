@@ -13,7 +13,8 @@ forumStruct = {
 
 class RSSPuller(ForumParser):
     def __init__(self, forumStruct, cachefile, pull_type='static') -> None:
-        super.__init__(self, forumStruct["url"], pull_type)
+        super().__init__(forumStruct["url"], pull_type)
+        self.url = forumStruct["url"]
         self.base = forumStruct["base"]
         self.filters = forumStruct["filters"]
         self.start = forumStruct["start"]
@@ -57,4 +58,4 @@ class RSSPuller(ForumParser):
             feed_item = PyRSS2Gen.RSSItem(title=title, link=link, description=description, pubDate=date)
             feed_items.append(feed_item)
         
-        return feed_item
+        return feed_items

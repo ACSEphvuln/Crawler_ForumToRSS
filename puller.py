@@ -55,7 +55,7 @@ def getNulledTO():
 
     br_pull = RSSPuller(forumStruct={
                             "url":"https://www.nulled.to/forum/184-dumps-databases/?sort_key=start_date&sort_by=Z-A",
-                            "base":"/html/body/div[4]/div[3]/div/div[3]/div[4]/div[3]/div[3]/div/table/tbody",
+                            "base":"/html/body/div[4]/div[3]/div/div[3]/div[4]/div[3]/div[3]/div/table",
                             "start":5,
                             "filters":filters,
                             },
@@ -65,9 +65,13 @@ def getNulledTO():
     return br_pull.getRSSItems()
 
 def postNews(filename):
-    feed_items = []
+    #feed_items = []
     #feed_items.append(getBreachedVC()) - SITE DOWN
-    feed_items.append(getNulledTO())
+    feed_items = getNulledTO()
+
+    if feed_items == []:
+        print("[INF] Nothing to publish")
+        return
 
     feed = PyRSS2Gen.RSS2(
         title="New leaks",
@@ -78,10 +82,11 @@ def postNews(filename):
     )
 
     # print the RSS feed in XML format
+    f = feed.to_xml()
     with open(filename,'w') as g:
-        g.write(feed.to_xml())
+        g.write(f)
     
-    return feed.to_xml()
+    return f
 
 if __name__ == "__main__":
     postNews("feed/rss.xml")

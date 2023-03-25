@@ -7,7 +7,9 @@ class StaticPageGetter:
         self.url = url
 
     def getPage(self, waitTime=5):
-        page = urllib.request.urlopen(self.url,timeout=waitTime)
+        req = urllib.request.Request(self.url)
+        req.add_header('User-agent', 'Chrome 111.0.0, Windows 10/11')
+        page = urllib.request.urlopen(req,timeout=waitTime)
         return page.read()
 
 class DynamicPageGetter:

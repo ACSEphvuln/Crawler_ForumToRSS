@@ -9,20 +9,25 @@ class ForumParser:
             self.pageGetter = DynamicPageGetter(url)
         else:
             raise ValueError(f"Approach type {pull_type} is not implemented!")
-        
-    def getPosts(self, base, startElem, filters):
+    
+    def setFilters(self,base,start,filters):
+        self.base = base
+        self.start = start
+        self.filters = filters
+
+    def getPosts(self):
         html_content = self.pageGetter.getPage()
 
         try:
-            tableParser = TableParser(html_content, base)
+            tableParser = TableParser(html_content, self.base)
         except:
             print("[Err] Could not get base element")
             return None
 
-        tableParser.setGrabFilters(filters)
+        tableParser.setGrabFilters(self.filters)
 
         posts = []
-        for i in range(startElem, tableParser.getNumElem()):
+        for i in range(self.start, tableParser.getNumElem()):
             elem = tableParser.getElem(i)
             if elem != None:
                 posts.append(elem)
