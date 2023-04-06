@@ -1,5 +1,9 @@
 from .forumParser import ForumParser
 import PyRSS2Gen
+import html
+from dateutil import parser
+import pytz
+from urllib.parse import urlsplit, quote, urlunsplit
 
 """
 # FORUM STRUCTURE:
@@ -50,12 +54,30 @@ class RSSPuller(ForumParser):
 
         # add each element to the RSS feed
         feed_items = []
+        
         for element in elements:
-            title = f"{self.domain} | \"{element['Title']}\""
-            link = f"{self.domain}/{element['Link']}"
-            description = f"Leaked by {element['Description']}"
-            date = element['Date']
+            title = html.escape(f"{self.domain} | \"{element['Title']}\"", quote=True) 
+            link = html.escape(iri_to_ascii_url(element['Link']))
+            
+            description = html.escape(f"Leaked by {element['Description']}")
+            date = html.escape(parser.parse(element['Date'].replace('Today,','').replace("Yesterday,",'')).replace(tzinfo=pytz.timezone('GMT')).strftime("%a, %d %b %y %H:%M:%S %Z"))
             feed_item = PyRSS2Gen.RSSItem(title=title, link=link, description=description, pubDate=date)
             feed_items.append(feed_item)
         
         return feed_items
+    
+def iri_to_ascii_url(iri):
+    # Parse the IRI into its components
+    scheme, netloc, path, query, fragment = urlsplit(iri)
+
+    # Encode the IRI components to URL-encoded format
+    scheme = quote(scheme)
+    netloc = quote(netloc)
+    path = quote(path)
+    query = quote(query)
+    fragment = quote(fragment)
+
+    # Construct the ASCII-only URL using urlunsplit()
+    ascii_url = urlunsplit((scheme, netloc, path, query, fragment))
+
+    return ascii_url

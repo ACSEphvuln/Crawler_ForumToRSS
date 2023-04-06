@@ -48,7 +48,7 @@ def getNulledTO():
             "attrib": "href"
         },
         "Description":{
-            "xpath": "/td[5]/ul/li[1]/a/span/span",
+            "xpath": "/td[2]/span",
             "attrib": None
         },
     }
